@@ -28,7 +28,7 @@ public class FirstServlet implements Servlet {
     public void service(ServletRequest servletRequest, ServletResponse servletResponse) throws ServletException, IOException {
         logger.info("New request");
 
-        servletResponse.getWriter().println("<h1>Hello JavaEE</h1>");
+        servletResponse.getWriter().println("<h1>Hello JavaEE with Actions</h1>");
     }
 
     @Override
