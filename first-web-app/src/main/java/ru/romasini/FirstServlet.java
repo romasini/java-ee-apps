@@ -6,8 +6,6 @@ import org.slf4j.LoggerFactory;
 import javax.servlet.*;
 import java.io.IOException;
 
-
-//48
 public class FirstServlet implements Servlet {
 
     private  static final Logger logger = LoggerFactory.getLogger(FirstServlet.class);
