@@ -6,8 +6,6 @@ import org.slf4j.LoggerFactory;
 import javax.servlet.*;
 import java.io.IOException;
 
-
-//48
 public class FirstServlet implements Servlet {
 
     private  static final Logger logger = LoggerFactory.getLogger(FirstServlet.class);
@@ -28,7 +26,7 @@ public class FirstServlet implements Servlet {
     public void service(ServletRequest servletRequest, ServletResponse servletResponse) throws ServletException, IOException {
         logger.info("New request");
 
-        servletResponse.getWriter().println("<h1>Hello JavaEE</h1>");
+        servletResponse.getWriter().println("<h1>Hello JavaEE with Actions</h1>");
     }
 
     @Override
