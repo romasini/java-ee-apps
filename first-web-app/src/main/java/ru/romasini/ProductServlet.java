@@ -11,12 +11,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @WebServlet(urlPatterns = "/product/*")
 public class ProductServlet extends HttpServlet {
 
     private static final Logger logger = LoggerFactory.getLogger(ProductServlet.class);
     private ProductRepository productRepository;
+    private static final Pattern pathParam = Pattern.compile("\\/(\\d*)$");
 
     @Override
     public void init() throws ServletException {
@@ -25,23 +28,7 @@ public class ProductServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Long id = null;
-        String idPath = req.getPathInfo();
-
-        if (idPath != null) {
-            idPath = idPath.substring(1);//отбросим /
-            logger.info(idPath);
-            try {
-                id = Long.parseLong(idPath);
-            } catch (NumberFormatException e) {
-                logger.error(e.getMessage());
-                resp.getWriter().println("<h1>Some trouble</h1>");
-                return;
-            }
-        }
-
-        if(id == null){
-
+        if(req.getPathInfo() == null || req.getPathInfo().isEmpty() || req.getPathInfo().equals("/")){
             resp.getWriter().println("<table>");
 
             resp.getWriter().println("<thead>");
@@ -66,16 +53,32 @@ public class ProductServlet extends HttpServlet {
 
             resp.getWriter().println("</table>");
         }else {
-            Product product = productRepository.findById(id);
-            if (product != null) {
+            Matcher matcher = pathParam.matcher(req.getPathInfo());
+            if(matcher.matches()){
+                long id = 0;
+                try {
+                    id = Long.parseLong(matcher.group(1));
+                } catch (NumberFormatException e) {
+                    logger.info(e.getMessage());
+                    resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                    return;
+                }
+                Product product = productRepository.findById(id);
+                if (product == null){
+                    resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                    resp.getWriter().println("<h1>Product not found");
+                    return;
+                }
                 resp.getWriter().println("<h1>Product info:</h1>");
                 resp.getWriter().println("<p>Id: " + product.getId() + "</p>");
                 resp.getWriter().println("<p>Name: " + product.getName() + "</p>");
                 resp.getWriter().println("<p>Description: " + product.getDescription() + "</p>");
                 resp.getWriter().println("<p>Price: " + product.getPrice() + "</p>");
-            } else {
-                resp.getWriter().println("<h1>Product not found</h1>");
+            }else{
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+
             }
         }
+
     }
 }
