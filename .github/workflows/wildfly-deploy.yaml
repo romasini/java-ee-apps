@@ -1,6 +1,9 @@
 name: first-web-app build and deploy to remote Wildfly
 
-on: [push]
+on:
+  push:
+    branches:
+      - dev
 
 jobs:
   build:
