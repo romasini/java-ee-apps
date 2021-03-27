@@ -13,9 +13,6 @@
                 <c:url value="/product" var="productUrl"/>
                 <a class="nav-link" href="${productUrl}">Product</a>
             </li>
-
-            <!-- TODO при переходе по ссылкам должен открываться список категорий или клиентов -->
-
             <li class="nav-item active">
                 <c:url value="/category" var="categoryUrl"/>
                 <a class="nav-link" href="${categoryUrl}">Category</a>
