@@ -1,4 +1,4 @@
-package ru.romasini;
+package ru.romasini.dontuse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,16 +10,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet(urlPatterns = "/admin/*")
-public class AccessPermitServlet extends HttpServlet {
+@WebServlet(urlPatterns = "/access_denied")
+public class AccessDeniedServlet extends HttpServlet {
 
-    private static final Logger logger = LoggerFactory.getLogger(AccessPermitServlet.class);
+    private static final Logger logger = LoggerFactory.getLogger(AccessDeniedServlet.class);
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        logger.info("Access permit servlet");
+        logger.info("Access denied servlet");
 
-        resp.getWriter().println("<h1>Access permit</h1>");
-        
+        resp.getWriter().println("<h1>Access denied</h1>");
+
     }
 }

@@ -1,4 +1,4 @@
-package ru.romasini;
+package ru.romasini.dontuse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

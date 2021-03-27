@@ -8,7 +8,7 @@
 
     <servlet>
         <servlet-name>FirstServlet</servlet-name>
-        <servlet-class>ru.romasini.FirstServlet</servlet-class>
+        <servlet-class>ru.romasini.dontuse.FirstServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>

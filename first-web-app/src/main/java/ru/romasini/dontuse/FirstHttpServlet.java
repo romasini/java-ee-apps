@@ -1,4 +1,4 @@
-package ru.romasini;
+package ru.romasini.dontuse;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;

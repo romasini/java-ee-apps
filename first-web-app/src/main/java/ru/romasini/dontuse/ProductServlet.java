@@ -1,4 +1,4 @@
-package ru.romasini;
+package ru.romasini.dontuse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -6,7 +6,6 @@ import ru.romasini.persist.Product;
 import ru.romasini.persist.ProductRepository;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,7 +13,7 @@ import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@WebServlet(urlPatterns = "/product/*")
+//@WebServlet(urlPatterns = "/product/*")
 public class ProductServlet extends HttpServlet {
 
     private static final Logger logger = LoggerFactory.getLogger(ProductServlet.class);
