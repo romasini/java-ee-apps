@@ -7,14 +7,14 @@
 <body>
 
 <jsp:include page="navigation.jsp">
-    <jsp:param name="title" value="Product"/>
+    <jsp:param name="title" value="Category"/>
 </jsp:include>
 
 <div class="container">
     <div class="row py-2">
         <div class="col-12">
-            <c:url value="/product/new" var="productNewUrl"/>
-            <a class="btn btn-primary" href="${productNewUrl}">Add Product</a>
+            <c:url value="/category/new" var="categoryNewUrl"/>
+            <a class="btn btn-primary" href="${categoryNewUrl}">Add Category</a>
         </div>
 
         <div class="col-12">
@@ -23,35 +23,31 @@
                 <tr>
                     <th scope="col">Id</th>
                     <th scope="col">Name</th>
-                    <th scope="col">Description</th>
                     <th scope="col">Actions</th>
                 </tr>
                 </thead>
                 <tbody>
 
                 <c:choose>
-                    <c:when test="${requestScope.products.isEmpty()}">
+                    <c:when test="${requestScope.categories.isEmpty()}">
                         <tr>
-                            <td colspan="4">
+                            <td colspan="3">
                                 No data
                             </td>
                         </tr>
                     </c:when>
                     <c:otherwise>
-                        <c:forEach var="product" items="${requestScope.products}">
+                        <c:forEach var="category" items="${requestScope.categories}">
                             <tr>
                                 <th scope="row">
-                                    <c:out value="${product.id}"/>
+                                    <c:out value="${category.id}"/>
                                 </th>
                                 <td>
-                                    <c:out value="${product.name}"/>
+                                    <c:out value="${category.name}"/>
                                 </td>
                                 <td>
-                                    <c:out value="${product.description}"/>
-                                </td>
-                                <td>
-                                    <c:url value="/product/${product.id}" var="productUrl"/>
-                                    <a class="btn btn-success" href="${productUrl}"><i class="fas fa-edit"></i></a>
+                                    <c:url value="/category/${category.id}" var="categoryUrl"/>
+                                    <a class="btn btn-success" href="${categoryUrl}"><i class="fas fa-edit"></i></a>
                                     <a class="btn btn-danger" href="#"><i class="far fa-trash-alt"></i></a>
                                 </td>
                             </tr>

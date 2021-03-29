@@ -2,8 +2,9 @@ package ru.romasini;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.romasini.persist.Product;
-import ru.romasini.persist.ProductRepository;
+import ru.romasini.persist.Category;
+import ru.romasini.persist.CategoryRepository;
+import ru.romasini.persist.Customer;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -11,32 +12,31 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@WebServlet(urlPatterns = "/product/*")
-public class ProductControllerServlet extends HttpServlet {
+@WebServlet(urlPatterns = "/category/*")
+public class CategoryControllerServlet extends HttpServlet {
 
-    private static final Logger logger = LoggerFactory.getLogger(ProductControllerServlet.class);
+    private static final Logger logger = LoggerFactory.getLogger(CategoryControllerServlet.class);
 
     private static final Pattern pathParam = Pattern.compile("\\/(\\d*)$");
 
-    private ProductRepository productRepository;
+    private CategoryRepository categoryRepository;
 
     @Override
     public void init() throws ServletException {
-        productRepository = (ProductRepository) getServletContext().getAttribute("productRepository");
+        categoryRepository = (CategoryRepository) getServletContext().getAttribute("categoryRepository");
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         if (req.getPathInfo() == null || req.getPathInfo().equals("") || req.getPathInfo().equals("/")) {
-            req.setAttribute("products", productRepository.findAll());
-            getServletContext().getRequestDispatcher("/WEB-INF/views/product.jsp").forward(req, resp);
+            req.setAttribute("categories", categoryRepository.findAll());
+            getServletContext().getRequestDispatcher("/WEB-INF/views/category.jsp").forward(req, resp);
         } else if (req.getPathInfo().equals("/new")) {
-            req.setAttribute("product", new Product());
-            getServletContext().getRequestDispatcher("/WEB-INF/views/product_form.jsp").forward(req, resp);
+            req.setAttribute("category", new Category());
+            getServletContext().getRequestDispatcher("/WEB-INF/views/category_form.jsp").forward(req, resp);
         } else {
             Matcher matcher = pathParam.matcher(req.getPathInfo());
             if (matcher.matches()) {
@@ -47,12 +47,12 @@ public class ProductControllerServlet extends HttpServlet {
                     resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                     return;
                 }
-                Product product = productRepository.findById(id);
-                if (product == null) {
+                Category category = categoryRepository.findById(id);
+                if (category == null) {
                     resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
                 }
-                req.setAttribute("product", product);
-                getServletContext().getRequestDispatcher("/WEB-INF/views/product_form.jsp").forward(req, resp);
+                req.setAttribute("category", category);
+                getServletContext().getRequestDispatcher("/WEB-INF/views/category_form.jsp").forward(req, resp);
             }
             resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
         }
@@ -64,13 +64,11 @@ public class ProductControllerServlet extends HttpServlet {
 
             String strId = req.getParameter("id");
             try {
-                Product product = new Product(
+                Category category = new Category(
                         strId.isEmpty() ? null : Long.parseLong(strId),
-                        req.getParameter("name"),
-                        req.getParameter("description"),
-                        new BigDecimal(req.getParameter("price")));
-                productRepository.save(product);
-                resp.sendRedirect(getServletContext().getContextPath() + "/product");
+                        req.getParameter("name"));
+                categoryRepository.save(category);
+                resp.sendRedirect(getServletContext().getContextPath() + "/category");
             } catch (NumberFormatException ex) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             }
