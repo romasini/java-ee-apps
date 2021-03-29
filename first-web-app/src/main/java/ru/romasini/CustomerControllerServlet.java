@@ -2,6 +2,7 @@ package ru.romasini;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.romasini.persist.Category;
 import ru.romasini.persist.Customer;
 import ru.romasini.persist.CustomerRepository;
 import ru.romasini.persist.Product;
@@ -38,23 +39,17 @@ public class CustomerControllerServlet extends HttpServlet {
             req.setAttribute("customer", new Customer());
             getServletContext().getRequestDispatcher("/WEB-INF/views/customer_form.jsp").forward(req, resp);
         } else {
-            Matcher matcher = pathParam.matcher(req.getPathInfo());
-            if (matcher.matches()) {
-                long id;
-                try {
-                    id = Long.parseLong(matcher.group(1));
-                } catch (NumberFormatException ex) {
-                    resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                    return;
-                }
+            try {
+                long id = getIdFromPath(req.getPathInfo());
                 Customer customer = customerRepository.findById(id);
                 if (customer == null) {
                     resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
                 }
                 req.setAttribute("customer", customer);
                 getServletContext().getRequestDispatcher("/WEB-INF/views/customer_form.jsp").forward(req, resp);
+            } catch (IllegalArgumentException ex) {
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             }
-            resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
         }
     }
 
@@ -76,8 +71,28 @@ public class CustomerControllerServlet extends HttpServlet {
             } catch (NumberFormatException ex) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             }
+        } else if(req.getPathInfo().startsWith("/delete")) {
+            try {
+                long id = getIdFromPath(req.getPathInfo().replace("/delete", ""));
+                customerRepository.delete(id);
+                resp.sendRedirect(getServletContext().getContextPath() + "/customer");
+            } catch (IllegalArgumentException ex) {
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            }
         } else {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
+    }
+
+    private long getIdFromPath(String path) {
+        Matcher matcher = pathParam.matcher(path);
+        if (matcher.matches()) {
+            try {
+                return Long.parseLong(matcher.group(1));
+            } catch (NumberFormatException ex) {
+                throw new IllegalArgumentException(ex);
+            }
+        }
+        throw new IllegalArgumentException();
     }
 }

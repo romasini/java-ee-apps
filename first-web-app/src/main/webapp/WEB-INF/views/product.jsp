@@ -51,8 +51,13 @@
                                 </td>
                                 <td>
                                     <c:url value="/product/${product.id}" var="productUrl"/>
+                                    <c:url value="/product/delete/${product.id}" var="productDeleteUrl"/>
                                     <a class="btn btn-success" href="${productUrl}"><i class="fas fa-edit"></i></a>
-                                    <a class="btn btn-danger" href="#"><i class="far fa-trash-alt"></i></a>
+                                    <form method="post" action="${productDeleteUrl}" class="d-inline">
+                                        <button class="btn btn-danger">
+                                            <i class="far fa-trash-alt"></i>
+                                        </button>
+                                    </form>
                                 </td>
                             </tr>
                         </c:forEach>

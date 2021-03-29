@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import ru.romasini.persist.Category;
 import ru.romasini.persist.CategoryRepository;
 import ru.romasini.persist.Customer;
+import ru.romasini.persist.Product;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -38,23 +39,17 @@ public class CategoryControllerServlet extends HttpServlet {
             req.setAttribute("category", new Category());
             getServletContext().getRequestDispatcher("/WEB-INF/views/category_form.jsp").forward(req, resp);
         } else {
-            Matcher matcher = pathParam.matcher(req.getPathInfo());
-            if (matcher.matches()) {
-                long id;
-                try {
-                    id = Long.parseLong(matcher.group(1));
-                } catch (NumberFormatException ex) {
-                    resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                    return;
-                }
+            try {
+                long id = getIdFromPath(req.getPathInfo());
                 Category category = categoryRepository.findById(id);
                 if (category == null) {
                     resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
                 }
                 req.setAttribute("category", category);
                 getServletContext().getRequestDispatcher("/WEB-INF/views/category_form.jsp").forward(req, resp);
+            } catch (IllegalArgumentException ex) {
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             }
-            resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
         }
     }
 
@@ -72,8 +67,28 @@ public class CategoryControllerServlet extends HttpServlet {
             } catch (NumberFormatException ex) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             }
+        } else if(req.getPathInfo().startsWith("/delete")) {
+            try {
+                long id = getIdFromPath(req.getPathInfo().replace("/delete", ""));
+                categoryRepository.delete(id);
+                resp.sendRedirect(getServletContext().getContextPath() + "/category");
+            } catch (IllegalArgumentException ex) {
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            }
         } else {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
+    }
+
+    private long getIdFromPath(String path) {
+        Matcher matcher = pathParam.matcher(path);
+        if (matcher.matches()) {
+            try {
+                return Long.parseLong(matcher.group(1));
+            } catch (NumberFormatException ex) {
+                throw new IllegalArgumentException(ex);
+            }
+        }
+        throw new IllegalArgumentException();
     }
 }

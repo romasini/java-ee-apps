@@ -38,23 +38,17 @@ public class ProductControllerServlet extends HttpServlet {
             req.setAttribute("product", new Product());
             getServletContext().getRequestDispatcher("/WEB-INF/views/product_form.jsp").forward(req, resp);
         } else {
-            Matcher matcher = pathParam.matcher(req.getPathInfo());
-            if (matcher.matches()) {
-                long id;
-                try {
-                    id = Long.parseLong(matcher.group(1));
-                } catch (NumberFormatException ex) {
-                    resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                    return;
-                }
+            try {
+                long id = getIdFromPath(req.getPathInfo());
                 Product product = productRepository.findById(id);
                 if (product == null) {
                     resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
                 }
                 req.setAttribute("product", product);
                 getServletContext().getRequestDispatcher("/WEB-INF/views/product_form.jsp").forward(req, resp);
+            } catch (IllegalArgumentException ex) {
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             }
-            resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
         }
     }
 
@@ -74,8 +68,28 @@ public class ProductControllerServlet extends HttpServlet {
             } catch (NumberFormatException ex) {
                 resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             }
+        } else if(req.getPathInfo().startsWith("/delete")) {
+            try {
+                long id = getIdFromPath(req.getPathInfo().replace("/delete", ""));
+                productRepository.delete(id);
+                resp.sendRedirect(getServletContext().getContextPath() + "/product");
+            } catch (IllegalArgumentException ex) {
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            }
         } else {
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
         }
+    }
+
+    private long getIdFromPath(String path) {
+        Matcher matcher = pathParam.matcher(path);
+        if (matcher.matches()) {
+            try {
+                return Long.parseLong(matcher.group(1));
+            } catch (NumberFormatException ex) {
+                throw new IllegalArgumentException(ex);
+            }
+        }
+        throw new IllegalArgumentException();
     }
 }
