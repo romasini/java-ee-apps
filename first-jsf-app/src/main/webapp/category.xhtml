@@ -42,39 +42,31 @@
 
     <div class="container">
         <div class="row py-2">
-            <h:form id="productTableForm">
+            <h:form id="categoryTableForm">
                 <div class="col-12">
-                    <h:commandButton value="Add Product" styleClass="btn btn-success"
-                                     action="#{productController.addProduct()}"/>
+                    <h:commandButton value="Add Category" styleClass="btn btn-success"
+                                     action="#{categoryController.addCategory()}"/>
                 </div>
 
                 <div class="col-12">
-                    <h:dataTable value="#{productController.findAll()}" var="product"
+                    <h:dataTable value="#{categoryController.findAll()}" var="category"
                                  styleClass="table table-bordered my-2">
                         <h:column>
                             <f:facet name="header">Id</f:facet>
-                            #{product.id}
+                            #{category.id}
                         </h:column>
                         <h:column>
                             <f:facet name="header">Name</f:facet>
-                            #{product.name}
-                        </h:column>
-                        <h:column>
-                            <f:facet name="header">Description</f:facet>
-                            #{product.description}
-                        </h:column>
-                        <h:column>
-                            <f:facet name="header">Price</f:facet>
-                            #{product.price}
+                            #{category.name}
                         </h:column>
                         <h:column>
                             <f:facet name="header">Actions</f:facet>
 
                             <h:commandButton value="Edit" styleClass="btn btn-success"
-                                             action="#{productController.editProduct(product)}"/>
+                                             action="#{categoryController.editCategory(category)}"/>
                             <h:commandButton value="Delete" styleClass="btn btn-danger"
-                                             action="#{productController.deleteProduct(product)}">
-                                <f:ajax event="click" render="productTableForm"/>
+                                             action="#{categoryController.deleteCategory(category)}">
+                                <f:ajax event="click" render="categoryTableForm"/>
                             </h:commandButton>
                         </h:column>
                     </h:dataTable>
