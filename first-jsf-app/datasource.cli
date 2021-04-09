@@ -4,8 +4,8 @@ data-source add \
    --name=MySQLDS \
    --connection-url=jdbc:mysql://localhost:3306/javaee_product?createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC \
    --driver-name=mysql \
-   --user-name=root \
-   --password=grom4flame
+   --user-name=my_user \
+   --password=password
 
 # 2. restarting Wildfly server
 :reload
