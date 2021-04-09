@@ -1,7 +1,7 @@
 <html lang="en"
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:pp="http://primefaces.org/ui">
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+>
 
 <h:head>
     <!-- Required meta tags -->
@@ -33,56 +33,25 @@
                 <li class="nav-item active">
                     <h:link styleClass="nav-link" value="Category" outcome="/category"/>
                 </li>
-                <li class="nav-item active">
-                    <h:link styleClass="nav-link" value="Customer" outcome="/customer"/>
-                </li>
             </ul>
         </div>
     </nav>
 
     <div class="container">
         <div class="row py-2">
-            <h:form id="productTableForm">
-                <div class="col-12">
-                    <h:commandButton value="Add Product" styleClass="btn btn-success"
-                                     action="#{productController.addProduct()}"/>
-                </div>
-
-                <div class="col-12">
-                    <h:dataTable value="#{productController.findAll()}" var="product"
-                                 styleClass="table table-bordered my-2">
-                        <h:column>
-                            <f:facet name="header">Id</f:facet>
-                            #{product.id}
-                        </h:column>
-                        <h:column>
-                            <f:facet name="header">Name</f:facet>
-                            #{product.name}
-                        </h:column>
-                        <h:column>
-                            <f:facet name="header">Description</f:facet>
-                            #{product.description}
-                        </h:column>
-                        <h:column>
-                            <f:facet name="header">Price</f:facet>
-                            #{product.price}
-                        </h:column>
-                        <h:column>
-                            <f:facet name="header">Actions</f:facet>
-
-                            <h:commandButton value="Edit" styleClass="btn btn-success"
-                                             action="#{productController.editProduct(product)}"/>
-                            <h:commandButton value="Delete" styleClass="btn btn-danger"
-                                             action="#{productController.deleteProduct(product)}">
-                                <f:ajax event="click" render="productTableForm"/>
-                            </h:commandButton>
-                        </h:column>
-                    </h:dataTable>
-
-                </div>
-            </h:form>
+            <div class="col-12">
+                <h:form>
+                    <div class="form-group">
+                        <h:outputLabel value="Name"/>
+                        <h:inputText styleClass="form-control" id="name"
+                                     value="#{categoryController.category.name}"
+                                     placeholder="Enter name"/>
+                    </div>
+                    <h:commandButton value="Submit" styleClass="btn btn-primary"
+                                     action="#{categoryController.saveCategory()}"/>
+                </h:form>
+            </div>
         </div>
-
     </div>
 
     <!-- Optional JavaScript -->
@@ -96,5 +65,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
             integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
             crossorigin="anonymous"></script>
+
 </h:body>
+
 </html>
