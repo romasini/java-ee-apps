@@ -2,7 +2,6 @@ package ru.romasini.controller;
 
 import ru.romasini.persist.Category;
 import ru.romasini.persist.CategoryRepository;
-import ru.romasini.persist.Product;
 
 import javax.enterprise.context.SessionScoped;
 import javax.faces.event.ComponentSystemEvent;

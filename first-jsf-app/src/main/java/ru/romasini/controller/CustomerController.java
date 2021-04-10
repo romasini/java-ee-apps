@@ -1,7 +1,5 @@
 package ru.romasini.controller;
 
-import ru.romasini.persist.Category;
-import ru.romasini.persist.CategoryRepository;
 import ru.romasini.persist.Customer;
 import ru.romasini.persist.CustomerRepository;
 
