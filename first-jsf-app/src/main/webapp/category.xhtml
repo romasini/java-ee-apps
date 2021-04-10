@@ -16,6 +16,7 @@
 </h:head>
 
 <h:body>
+    <f:event listener="#{categoryController.preloadData}" type="preRenderView"/>
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="#">EShop</a>
@@ -43,6 +44,7 @@
     <div class="container">
         <div class="row py-2">
             <h:form id="categoryTableForm">
+
                 <div class="col-12">
                     <h:commandButton value="Add Category" styleClass="btn btn-success"
                                      action="#{categoryController.addCategory()}"/>

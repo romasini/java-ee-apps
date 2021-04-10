@@ -1,47 +1,72 @@
 package ru.romasini.persist;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Named;
-import java.math.BigDecimal;
-import java.util.ArrayList;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.transaction.SystemException;
+import javax.transaction.Transactional;
+import javax.transaction.UserTransaction;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
 
 @ApplicationScoped
 @Named
 public class CustomerRepository {
 
-    private Map<Long, Customer> customerMap = new ConcurrentHashMap<>();
-    private final AtomicLong identity = new AtomicLong(0);
+    @PersistenceContext(unitName = "ds")
+    private EntityManager entityManager;
+
+    @Resource
+    private UserTransaction userTransaction;
 
     @PostConstruct
     public void init() {
-        save(new Customer(null, "Petrov John", "petrov@mail.com", "85961234596","New-Vasuky, 123"));
-        save(new Customer(null, "Vodkin John", "vodkin@mail.com", "85961564596","New-Vasuky, 456"));
-        save(new Customer(null, "Sidorov John", "sidorov@mail.com", "85981234596","New-Vasuky, 758"));
+        if(count()==0) {
+            try {
+                userTransaction.begin();
+                save(new Customer(null, "Petrov John", "petrov@mail.com", "85961234596","New-Vasuky, 123"));
+                save(new Customer(null, "Vodkin John", "vodkin@mail.com", "85961564596","New-Vasuky, 456"));
+                save(new Customer(null, "Sidorov John", "sidorov@mail.com", "85981234596","New-Vasuky, 758"));
+                userTransaction.commit();
+            } catch (Exception e) {
+                try {
+                    userTransaction.rollback();
+                } catch (SystemException systemException) {
+                    throw new RuntimeException(systemException);
+                }
+                throw new RuntimeException(e);
+            }
+        }
     }
 
-
+    @Transactional
     public void save(Customer customer){
         if(customer.getId() == null){
-            customer.setId(identity.incrementAndGet());
+            entityManager.persist(customer);
         }
 
-        customerMap.put(customer.getId(), customer);
+        entityManager.merge(customer);
     }
 
+    @Transactional
     public void delete(Long id){
-        customerMap.remove(id);
+        entityManager.createNamedQuery("deleteCustomerById")
+                .setParameter("id", id)
+                .executeUpdate();
     }
 
     public Customer findById(Long id){
-        return customerMap.get(id);
+        return entityManager.find(Customer.class, id);
     }
 
     public List<Customer> findAll(){
-        return new ArrayList<>(customerMap.values());
+        return entityManager.createNamedQuery("findAllCustomer", Customer.class).
+                getResultList();
+    }
+
+    public long count(){
+        return entityManager.createNamedQuery("countCustomer", Long.class).getSingleResult();
     }
 }
