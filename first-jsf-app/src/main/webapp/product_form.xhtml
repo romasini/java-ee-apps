@@ -1,5 +1,6 @@
 <html lang="en"
       xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
 >
 
@@ -54,7 +55,18 @@
                                      placeholder="Enter description"/>
                     </div>
                     <div class="form-group">
-                        <label>Price</label>
+                        <h:outputLabel value="Category"/>
+                        <h:selectOneListbox size = "1" styleClass="form-control" id="category"
+                                     value="#{productController.product.categoryId}">
+                            <f:selectItems value="#{productController.categoryList}"
+                                var = "cat"
+                                itemValue="#{cat.id}"
+                                itemLabel="#{cat.name}"
+                                itemLabelEscaped = "true"/>
+
+                        </h:selectOneListbox>
+                    </div>
+                    <div class="form-group">
                         <h:outputLabel value="Price"/>
                         <h:inputText styleClass="form-control" p:type="number" id="price"
                                      value="#{productController.product.price}"
