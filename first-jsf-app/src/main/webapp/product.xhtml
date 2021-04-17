@@ -32,11 +32,14 @@
                 <li class="nav-item active">
                     <h:link styleClass="nav-link" value="Product" outcome="/product"/>
                 </li>
-                <li class="nav-item active">
+                <li class="nav-item">
                     <h:link styleClass="nav-link" value="Category" outcome="/category"/>
                 </li>
-                <li class="nav-item active">
+                <li class="nav-item">
                     <h:link styleClass="nav-link" value="Customer" outcome="/customer"/>
+                </li>
+                <li class="nav-item">
+                    <h:link styleClass="nav-link" value="Cart" outcome="/cart"/>
                 </li>
             </ul>
         </div>
@@ -81,6 +84,10 @@
                             <h:commandButton value="Delete" styleClass="btn btn-danger"
                                              action="#{productController.deleteProduct(product)}">
                                 <f:ajax event="click" render="productTableForm"/>
+                            </h:commandButton>
+                            <h:commandButton value="Add to cart" styleClass="btn btn-primary"
+                                            action="#{cartController.add(product)}">
+                                <f:ajax event="click"/>
                             </h:commandButton>
                         </h:column>
                     </h:dataTable>
