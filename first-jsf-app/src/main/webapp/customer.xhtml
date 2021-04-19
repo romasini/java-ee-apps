@@ -16,6 +16,7 @@
 </h:head>
 
 <h:body>
+    <f:event listener="#{customerController.preloadData}" type="preRenderView"/>
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="#">EShop</a>
@@ -27,14 +28,17 @@
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
+                <li class="nav-item ">
                     <h:link styleClass="nav-link" value="Product" outcome="/product"/>
                 </li>
-                <li class="nav-item active">
+                <li class="nav-item ">
                     <h:link styleClass="nav-link" value="Category" outcome="/category"/>
                 </li>
                 <li class="nav-item active">
                     <h:link styleClass="nav-link" value="Customer" outcome="/customer"/>
+                </li>
+                <li class="nav-item">
+                    <h:link styleClass="nav-link" value="Cart" outcome="/cart"/>
                 </li>
             </ul>
         </div>

@@ -1,7 +1,7 @@
 <html lang="en"
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
->
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:pp="http://primefaces.org/ui">
 
 <h:head>
     <!-- Required meta tags -->
@@ -16,6 +16,7 @@
 </h:head>
 
 <h:body>
+    <f:event listener="#{categoryController.preloadData}" type="preRenderView"/>
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="#">EShop</a>
@@ -36,7 +37,7 @@
                 <li class="nav-item">
                     <h:link styleClass="nav-link" value="Customer" outcome="/customer"/>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item active">
                     <h:link styleClass="nav-link" value="Cart" outcome="/cart"/>
                 </li>
             </ul>
@@ -45,37 +46,36 @@
 
     <div class="container">
         <div class="row py-2">
-            <div class="col-12">
-                <h:form>
-                    <div class="form-group">
-                        <h:outputLabel value="Name"/>
-                        <h:inputText styleClass="form-control" id="name"
-                                     value="#{customerController.customer.name}"
-                                     placeholder="Enter name"/>
-                    </div>
-                    <div class="form-group">
-                        <h:outputLabel value="Email"/>
-                        <h:inputText styleClass="form-control" id="email"
-                                     value="#{customerController.customer.email}"
-                                     placeholder="Enter email"/>
-                    </div>
-                    <div class="form-group">
-                        <h:outputLabel value="Phone"/>
-                        <h:inputText styleClass="form-control" id="phone"
-                                     value="#{customerController.customer.phone}"
-                                     placeholder="Enter phone"/>
-                    </div>
-                    <div class="form-group">
-                        <h:outputLabel value="Address"/>
-                        <h:inputText styleClass="form-control" id="address"
-                                     value="#{customerController.customer.address}"
-                                     placeholder="Enter address"/>
-                    </div>
-                    <h:commandButton value="Submit" styleClass="btn btn-primary"
-                                     action="#{customerController.saveCustomer()}"/>
-                </h:form>
-            </div>
+            <h:form id="curtTableForm">
+
+                <div class="col-12">
+                    <h:dataTable value="#{cartController.findAll()}" var="product"
+                                 styleClass="table table-bordered my-2">
+                        <h:column>
+                            <f:facet name="header">Id</f:facet>
+                            #{product.id}
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Name</f:facet>
+                            #{product.name}
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Price</f:facet>
+                            #{product.price}
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header">Actions</f:facet>
+                            <h:commandButton value="Delete" styleClass="btn btn-danger"
+                                             action="#{cartController.delete(product)}">
+                                <f:ajax event="click" render="curtTableForm"/>
+                            </h:commandButton>
+                        </h:column>
+                    </h:dataTable>
+
+                </div>
+            </h:form>
         </div>
+
     </div>
 
     <!-- Optional JavaScript -->
@@ -89,7 +89,5 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
             integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
             crossorigin="anonymous"></script>
-
 </h:body>
-
 </html>

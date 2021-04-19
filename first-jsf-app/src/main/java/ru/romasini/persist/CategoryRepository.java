@@ -1,46 +1,60 @@
 package ru.romasini.persist;
 
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Named;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
+import ru.romasini.persist.meta.Category_;
 
-@ApplicationScoped
-@Named
+import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.*;
+import java.util.List;
+
+@Stateless
 public class CategoryRepository {
 
-    private Map<Long, Category> categoryMap = new ConcurrentHashMap<>();
-    private final AtomicLong identity = new AtomicLong(0);
-
-    @PostConstruct
-    public void init() {
-        save(new Category(null, "Category 1"));
-        save(new Category(null, "Category 2"));
-        save(new Category(null, "Category 3"));
-    }
+    @PersistenceContext(unitName = "ds")
+    private EntityManager entityManager;
 
     public void save(Category category){
         if(category.getId() == null){
-            category.setId(identity.incrementAndGet());
+            entityManager.persist(category);
         }
 
-        categoryMap.put(category.getId(), category);
+        entityManager.merge(category);
     }
 
     public void delete(Long id){
-        categoryMap.remove(id);
+        entityManager.createNamedQuery("deleteCategoryById")
+                .setParameter("id", id)
+                .executeUpdate();
     }
 
     public Category findById(Long id){
-        return categoryMap.get(id);
+        return entityManager.find(Category.class, id);
     }
 
     public List<Category> findAll(){
-        return new ArrayList<>(categoryMap.values());
+        return entityManager.createNamedQuery("findAllCategory", Category.class).
+                getResultList();
+    }
+
+    public Category getReference(Long id) {
+        return entityManager.getReference(Category.class, id);
+    }
+
+    public List<Category> findAllWithFilter(String filterName){
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Category> query = cb.createQuery(Category.class);
+        Root<Category> c = query.from(Category.class);
+        ParameterExpression<String> fn = cb.parameter(String.class);
+        Predicate condition = cb.like(c.get(Category_.name), fn);
+        query.select(c).where(condition);
+        TypedQuery<Category> q = entityManager.createQuery(query);
+        q.setParameter(fn, filterName);
+        return q.getResultList();
+    }
+
+    public long count(){
+        return entityManager.createNamedQuery("countCategory", Long.class).getSingleResult();
     }
 }

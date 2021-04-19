@@ -1,11 +1,15 @@
 package ru.romasini.controller;
 
+import ru.romasini.persist.Category;
+import ru.romasini.persist.CategoryRepository;
 import ru.romasini.persist.Product;
 import ru.romasini.persist.ProductRepository;
+import ru.romasini.service.ProductService;
+import ru.romasini.service.dto.ProductDto;
 
+import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.event.ComponentSystemEvent;
-import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.Serializable;
 import java.util.List;
@@ -14,44 +18,53 @@ import java.util.List;
 @Named
 public class ProductController implements Serializable {
 
-    @Inject
-    private ProductRepository productRepository;
+    @EJB
+    private ProductService productService;
 
-    private Product product;
-    private List<Product> productList;
+    @EJB
+    private CategoryRepository categoryRepository;
+
+    private ProductDto product;
+    private List<ProductDto> productList;
+    private List<Category> categoryList;
 
     public void preloadData(ComponentSystemEvent componentSystemEvent){
-        this.productList = productRepository.findAll();
+        this.productList = productService.findAll();
+        this.categoryList = categoryRepository.findAll();
     }
 
-    public Product getProduct() {
+    public ProductDto getProduct() {
         return product;
     }
 
-    public void setProduct(Product product) {
+    public void setProduct(ProductDto product) {
         this.product = product;
     }
 
-    public List<Product> findAll() {
+    public List<ProductDto> findAll() {
         return productList;
     }
 
-    public String editProduct(Product product) {
+    public String editProduct(ProductDto product) {
         this.product = product;
         return "/product_form.xhtml?faces-redirect=true";
     }
 
-    public void deleteProduct(Product product) {
-        productRepository.delete(product.getId());
+    public void deleteProduct(ProductDto product) {
+        productService.delete(product.getId());
     }
 
     public String saveProduct() {
-        productRepository.save(product);
+        productService.save(product);
         return "/product.xhtml?faces-redirect=true";
     }
 
     public String addProduct() {
-        this.product = new Product();
+        this.product = new ProductDto();
         return "/product_form.xhtml?faces-redirect=true";
+    }
+
+    public List<Category> getCategoryList(){
+        return categoryList;
     }
 }

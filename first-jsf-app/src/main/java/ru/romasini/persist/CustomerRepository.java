@@ -1,47 +1,40 @@
 package ru.romasini.persist;
 
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Named;
-import java.math.BigDecimal;
-import java.util.ArrayList;
+import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
 
-@ApplicationScoped
-@Named
+@Stateless
 public class CustomerRepository {
 
-    private Map<Long, Customer> customerMap = new ConcurrentHashMap<>();
-    private final AtomicLong identity = new AtomicLong(0);
-
-    @PostConstruct
-    public void init() {
-        save(new Customer(null, "Petrov John", "petrov@mail.com", "85961234596","New-Vasuky, 123"));
-        save(new Customer(null, "Vodkin John", "vodkin@mail.com", "85961564596","New-Vasuky, 456"));
-        save(new Customer(null, "Sidorov John", "sidorov@mail.com", "85981234596","New-Vasuky, 758"));
-    }
-
+    @PersistenceContext(unitName = "ds")
+    private EntityManager entityManager;
 
     public void save(Customer customer){
         if(customer.getId() == null){
-            customer.setId(identity.incrementAndGet());
+            entityManager.persist(customer);
         }
 
-        customerMap.put(customer.getId(), customer);
+        entityManager.merge(customer);
     }
 
     public void delete(Long id){
-        customerMap.remove(id);
+        entityManager.createNamedQuery("deleteCustomerById")
+                .setParameter("id", id)
+                .executeUpdate();
     }
 
     public Customer findById(Long id){
-        return customerMap.get(id);
+        return entityManager.find(Customer.class, id);
     }
 
     public List<Customer> findAll(){
-        return new ArrayList<>(customerMap.values());
+        return entityManager.createNamedQuery("findAllCustomer", Customer.class).
+                getResultList();
+    }
+
+    public long count(){
+        return entityManager.createNamedQuery("countCustomer", Long.class).getSingleResult();
     }
 }

@@ -4,6 +4,7 @@ import ru.romasini.persist.Category;
 import ru.romasini.persist.CategoryRepository;
 
 import javax.enterprise.context.SessionScoped;
+import javax.faces.event.ComponentSystemEvent;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.Serializable;
@@ -16,7 +17,20 @@ public class CategoryController implements Serializable {
     @Inject
     private CategoryRepository categoryRepository;
     private Category category;
+    private List<Category> categoryList;
+    private String filterName;
 
+    public void preloadData(ComponentSystemEvent componentSystemEvent){
+        this.categoryList = categoryRepository.findAll();
+    }
+
+    public String getFilterName() {
+        return filterName;
+    }
+
+    public void setFilterName(String filterName) {
+        this.filterName = filterName;
+    }
 
     public Category getCategory() {
         return category;
@@ -27,7 +41,7 @@ public class CategoryController implements Serializable {
     }
 
     public List<Category> findAll() {
-        return categoryRepository.findAll();
+        return categoryList;
     }
 
     public String editCategory(Category category) {
