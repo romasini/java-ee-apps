@@ -1,5 +1,6 @@
 <html lang="en"
       xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
 >
 
@@ -27,11 +28,17 @@
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
+                <li class="nav-item">
                     <h:link styleClass="nav-link" value="Product" outcome="/product"/>
                 </li>
-                <li class="nav-item active">
+                <li class="nav-item">
                     <h:link styleClass="nav-link" value="Category" outcome="/category"/>
+                </li>
+                <li class="nav-item">
+                    <h:link styleClass="nav-link" value="Customer" outcome="/customer"/>
+                </li>
+                <li class="nav-item">
+                    <h:link styleClass="nav-link" value="Cart" outcome="/cart"/>
                 </li>
             </ul>
         </div>
@@ -54,7 +61,18 @@
                                      placeholder="Enter description"/>
                     </div>
                     <div class="form-group">
-                        <label>Price</label>
+                        <h:outputLabel value="Category"/>
+                        <h:selectOneListbox size = "1" styleClass="form-control" id="category"
+                                     value="#{productController.product.categoryId}">
+                            <f:selectItems value="#{productController.categoryList}"
+                                var = "cat"
+                                itemValue="#{cat.id}"
+                                itemLabel="#{cat.name}"
+                                itemLabelEscaped = "true"/>
+
+                        </h:selectOneListbox>
+                    </div>
+                    <div class="form-group">
                         <h:outputLabel value="Price"/>
                         <h:inputText styleClass="form-control" p:type="number" id="price"
                                      value="#{productController.product.price}"
