@@ -2,8 +2,6 @@ package ru.romasini.controller;
 
 import ru.romasini.persist.Category;
 import ru.romasini.persist.CategoryRepository;
-import ru.romasini.persist.Product;
-import ru.romasini.persist.ProductRepository;
 import ru.romasini.service.ProductService;
 import ru.romasini.service.dto.ProductDto;
 

@@ -13,7 +13,7 @@
     <artifactId>first-jsf-app</artifactId>
 
     <dependencies>
-        <dependency>
+       <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
             <version>4.0.1</version>
@@ -81,6 +81,13 @@
             <version>1.7.30</version>
             <scope>provided</scope>
         </dependency>
+
+        <dependency>
+            <groupId>ru.romasini</groupId>
+            <artifactId>product-api</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
     </dependencies>
 
     <build>

@@ -37,4 +37,9 @@ public class ProductRepository {
     public long count(){
         return entityManager.createNamedQuery("countProduct", Long.class).getSingleResult();
     }
+
+    public List<Product> findAllWithCategoryFetch() {
+        return entityManager.createNamedQuery("findAllWithCategoryFetch", Product.class)
+                .getResultList();
+    }
 }

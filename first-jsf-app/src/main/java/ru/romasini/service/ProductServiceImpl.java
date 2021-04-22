@@ -1,5 +1,6 @@
 package ru.romasini.service;
 
+import ru.romasini.ProductServiceRemote;
 import ru.romasini.persist.Category;
 import ru.romasini.persist.CategoryRepository;
 import ru.romasini.persist.Product;
@@ -7,13 +8,15 @@ import ru.romasini.persist.ProductRepository;
 import ru.romasini.service.dto.ProductDto;
 
 import javax.ejb.EJB;
+import javax.ejb.Remote;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Stateless
-public class ProductServiceImpl implements ProductService{
+@Remote(ProductServiceRemote.class)
+public class ProductServiceImpl implements ProductService, ProductServiceRemote{
 
     @EJB
     private ProductRepository productRepository;
@@ -64,5 +67,17 @@ public class ProductServiceImpl implements ProductService{
                 product.getPrice(),
                 null,
                 null);
+    }
+
+    @Override
+    public List<ProductDto> findAllRemote() {
+        return findAllWithCategoryFetch();
+    }
+
+    @Override
+    public List<ProductDto> findAllWithCategoryFetch() {
+        return productRepository.findAllWithCategoryFetch().stream()
+                .map(ProductServiceImpl::createProductDtoWithCategory)
+                .collect(Collectors.toList());
     }
 }
