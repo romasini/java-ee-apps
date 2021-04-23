@@ -8,7 +8,9 @@ import java.math.BigDecimal;
 @NamedQueries({
         @NamedQuery(name="deleteProductById", query="delete from Product p where p.id = :id"),
         @NamedQuery(name="findAllProduct", query="from Product p"),
-        @NamedQuery(name = "findAllWithCategoryFetch", query = "select p from Product p left join fetch p.category"),
+        @NamedQuery(name="findByName", query="from Product p where p.name like :name"),
+        @NamedQuery(name="findByCategoryId", query="from Product p where p.category.id = :id"),
+        @NamedQuery(name="findAllWithCategoryFetch", query = "select p from Product p left join fetch p.category"),
         @NamedQuery(name="countProduct", query="select count(*) from Product p")
 })
 public class Product {
