@@ -5,6 +5,7 @@ import ru.romasini.persist.Category;
 import ru.romasini.persist.CategoryRepository;
 import ru.romasini.persist.Product;
 import ru.romasini.persist.ProductRepository;
+import ru.romasini.rest.ProductResource;
 import ru.romasini.service.dto.ProductDto;
 
 import javax.ejb.EJB;
@@ -16,7 +17,7 @@ import java.util.stream.Collectors;
 
 @Stateless
 @Remote(ProductServiceRemote.class)
-public class ProductServiceImpl implements ProductService, ProductServiceRemote{
+public class ProductServiceImpl implements ProductService, ProductServiceRemote, ProductResource {
 
     @EJB
     private ProductRepository productRepository;
@@ -48,6 +49,22 @@ public class ProductServiceImpl implements ProductService, ProductServiceRemote{
         return productRepository.findAll().stream()
                 .map(ProductServiceImpl::createProductDtoWithCategory)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void insert(ProductDto productDto) {
+        if(productDto.getId() != null){
+            throw new IllegalArgumentException("Not null id in the inserted Product");
+        }
+        save(productDto);
+    }
+
+    @Override
+    public void update(ProductDto productDto) {
+        if(productDto.getId() == null){
+            throw new IllegalArgumentException("Null id in the updated Product");
+        }
+        save(productDto);
     }
 
 
