@@ -21,7 +21,7 @@ jobs:
         id: mvn_build_0
         run:
           cd product-api
-          mvn --batch-mode clean install
+          mvn clean install
 
       - name: Build with Maven
         id: mvn_build_1
