@@ -34,6 +34,18 @@ public class ProductRepository {
                 getResultList();
     }
 
+    public List<Product> findByName(String name){
+        return entityManager.createNamedQuery("findByName", Product.class).
+                setParameter("name", name + "%").
+                getResultList();
+    }
+
+    public List<Product> findByCategoryId(Long id){
+        return entityManager.createNamedQuery("findByCategoryId", Product.class).
+                setParameter("id", id).
+                getResultList();
+    }
+
     public long count(){
         return entityManager.createNamedQuery("countProduct", Long.class).getSingleResult();
     }

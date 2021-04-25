@@ -45,6 +45,20 @@ public class ProductServiceImpl implements ProductService, ProductServiceRemote,
     }
 
     @Override
+    public List<ProductDto> findByName(String name) {
+        return productRepository.findByName(name).stream()
+                .map(ProductServiceImpl::createProductDtoWithCategory)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ProductDto> findByCategoryId(Long id) {
+        return productRepository.findByCategoryId(id).stream()
+                .map(ProductServiceImpl::createProductDtoWithCategory)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public List<ProductDto> findAll() {
         return productRepository.findAll().stream()
                 .map(ProductServiceImpl::createProductDtoWithCategory)

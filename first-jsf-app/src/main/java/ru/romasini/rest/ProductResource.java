@@ -19,6 +19,16 @@ public interface ProductResource {
     @Produces(MediaType.APPLICATION_JSON)
     ProductDto findById(@PathParam("id") Long id);
 
+    @GET
+    @Path("/by_name/{name}")
+    @Produces(MediaType.APPLICATION_JSON)
+    List<ProductDto> findByName(@PathParam("name") String name);
+
+    @GET
+    @Path("/by_category/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    List<ProductDto> findByCategoryId(@PathParam("id") Long id);
+
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     void insert(ProductDto productDto);
