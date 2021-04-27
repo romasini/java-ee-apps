@@ -65,6 +65,7 @@
 
                 <div class="col-12">
                     <h:commandButton value="Add Category" styleClass="btn btn-success"
+                                     rendered="#{request.isUserInRole('ADMIN')||request.isUserInRole('MANAGER')}"
                                      action="#{categoryController.addCategory()}"/>
                 </div>
 
@@ -83,8 +84,10 @@
                             <f:facet name="header">Actions</f:facet>
 
                             <h:commandButton value="Edit" styleClass="btn btn-success"
+                                             rendered="#{request.isUserInRole('ADMIN')||request.isUserInRole('MANAGER')}"
                                              action="#{categoryController.editCategory(category)}"/>
                             <h:commandButton value="Delete" styleClass="btn btn-danger"
+                                             rendered="#{request.isUserInRole('ADMIN')||request.isUserInRole('MANAGER')}"
                                              action="#{categoryController.deleteCategory(category)}">
                                 <f:ajax event="click" render="categoryTableForm"/>
                             </h:commandButton>

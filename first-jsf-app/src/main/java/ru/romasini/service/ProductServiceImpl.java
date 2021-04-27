@@ -8,6 +8,8 @@ import ru.romasini.persist.ProductRepository;
 import ru.romasini.rest.ProductResource;
 import ru.romasini.service.dto.ProductDto;
 
+import javax.annotation.security.PermitAll;
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.EJB;
 import javax.ejb.Remote;
 import javax.ejb.Stateless;
@@ -15,6 +17,7 @@ import javax.ejb.TransactionAttribute;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@PermitAll
 @Stateless
 @Remote(ProductServiceRemote.class)
 public class ProductServiceImpl implements ProductService, ProductServiceRemote, ProductResource {
@@ -25,6 +28,7 @@ public class ProductServiceImpl implements ProductService, ProductServiceRemote,
     @EJB
     private CategoryRepository categoryRepository;
 
+    @RolesAllowed({"ADMIN","MANAGER"})
     @Override
     @TransactionAttribute
     public void save(ProductDto product) {
@@ -33,6 +37,7 @@ public class ProductServiceImpl implements ProductService, ProductServiceRemote,
         productRepository.save(product1);
     }
 
+    @RolesAllowed({"ADMIN", "MANAGER"})
     @Override
     @TransactionAttribute
     public void delete(Long id) {
