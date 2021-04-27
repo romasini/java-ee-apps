@@ -26,7 +26,7 @@ jobs:
 #        id: mvn_build_1
 #        run: |
 #          cd first-web-app
-#          mvn --batch-mode clean install wildfly:undeploy wildfly:deploy \
+#          mvn --batch-mode wildfly:undeploy wildfly:deploy \
 #          -Dwildfly.hostname=${{ secrets.WILDFLY_DEPLOY_HOSTNAME }} \
 #          -Dwildfly.username=${{ secrets.WILDFLY_ADMIN_LOGIN }} \
 #          -Dwildfly.password=${{ secrets.WILDFLY_ADMIN_PASSWORD }}
@@ -35,7 +35,7 @@ jobs:
         id: mvn_build_2
         run: |
           cd first-jsf-app
-          mvn --batch-mode clean install wildfly:undeploy wildfly:deploy \
+          mvn --batch-mode wildfly:undeploy wildfly:deploy \
           -Dwildfly.hostname=${{ secrets.WILDFLY_DEPLOY_HOSTNAME }} \
           -Dwildfly.username=${{ secrets.WILDFLY_ADMIN_LOGIN }} \
           -Dwildfly.password=${{ secrets.WILDFLY_ADMIN_PASSWORD }}

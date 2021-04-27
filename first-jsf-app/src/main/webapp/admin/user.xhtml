@@ -1,7 +1,7 @@
-<html lang="en"
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:pp="http://primefaces.org/ui">
+      >
 
 <h:head>
     <!-- Required meta tags -->
@@ -16,7 +16,8 @@
 </h:head>
 
 <h:body>
-    <f:event listener="#{categoryController.preloadData}" type="preRenderView"/>
+
+    <f:event listener="${userController.preLoad()}" type="preRenderView" />
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="#">EShop</a>
@@ -31,7 +32,7 @@
                 <li class="nav-item">
                     <h:link styleClass="nav-link" value="Product" outcome="/product"/>
                 </li>
-                <li class="nav-item active">
+                <li class="nav-item">
                     <h:link styleClass="nav-link" value="Category" outcome="/category"/>
                 </li>
                 <li class="nav-item">
@@ -40,7 +41,7 @@
                 <li class="nav-item">
                     <h:link styleClass="nav-link" value="Cart" outcome="/cart"/>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item active">
                     <h:link styleClass="nav-link" value="User" outcome="/admin/user"/>
                 </li>
             </ul>
@@ -61,40 +62,35 @@
 
     <div class="container">
         <div class="row py-2">
-            <h:form id="categoryTableForm">
-
+            <h:form id="productsForm">
                 <div class="col-12">
-                    <h:commandButton value="Add Category" styleClass="btn btn-success"
-                                     action="#{categoryController.addCategory()}"/>
+                    <h:commandButton value="Add user" styleClass="btn btn-primary"
+                                     action="#{userController.createUser()}"/>
                 </div>
 
                 <div class="col-12">
-                    <h:dataTable value="#{categoryController.findAll()}" var="category"
+                    <h:dataTable value="#{userController.allUsers}" var="user"
                                  styleClass="table table-bordered my-2">
                         <h:column>
                             <f:facet name="header">Id</f:facet>
-                            #{category.id}
+                            #{user.id}
                         </h:column>
                         <h:column>
-                            <f:facet name="header">Name</f:facet>
-                            #{category.name}
+                            <f:facet name="header">Login</f:facet>
+                            #{user.login}
                         </h:column>
                         <h:column>
-                            <f:facet name="header">Actions</f:facet>
-
-                            <h:commandButton value="Edit" styleClass="btn btn-success"
-                                             action="#{categoryController.editCategory(category)}"/>
-                            <h:commandButton value="Delete" styleClass="btn btn-danger"
-                                             action="#{categoryController.deleteCategory(category)}">
-                                <f:ajax event="click" render="categoryTableForm"/>
+                            <f:facet name="header">Action</f:facet>
+                            <h:commandButton value="Edit" action="#{userController.editUser(user)}"
+                                             styleClass="mr-1"/>
+                            <h:commandButton value="Delete" action="#{userController.deleteUser(user)}">
+                                <f:ajax event="click" render="productsForm"/>
                             </h:commandButton>
                         </h:column>
                     </h:dataTable>
-
                 </div>
             </h:form>
         </div>
-
     </div>
 
     <!-- Optional JavaScript -->
