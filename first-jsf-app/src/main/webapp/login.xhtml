@@ -1,7 +1,7 @@
-<html lang="en"
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:f="http://xmlns.jcp.org/jsf/core"
-      xmlns:pp="http://primefaces.org/ui">
+      xmlns:p="http://xmlns.jcp.org/jsf/passthrough"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
 
 <h:head>
     <!-- Required meta tags -->
@@ -17,8 +17,6 @@
 
 <h:body>
 
-    <f:event listener="#{productController.preloadData}" type="preRenderView"/>
-
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="#">EShop</a>
 
@@ -29,7 +27,7 @@
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
+                <li class="nav-item">
                     <h:link styleClass="nav-link" value="Product" outcome="/product"/>
                 </li>
                 <li class="nav-item">
@@ -41,7 +39,7 @@
                 <li class="nav-item">
                     <h:link styleClass="nav-link" value="Cart" outcome="/cart"/>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item active">
                     <h:link styleClass="nav-link" value="User" outcome="/admin/user"/>
                 </li>
             </ul>
@@ -62,58 +60,22 @@
 
     <div class="container">
         <div class="row py-2">
-            <h:form id="productTableForm">
-                <div class="col-12">
-                    <h:commandButton value="Add Product" styleClass="btn btn-success"
-                                     rendered="#{request.isUserInRole('ADMIN')||request.isUserInRole('MANAGER')}"
-                                     action="#{productController.addProduct()}"/>
-                </div>
-
-                <div class="col-12">
-                    <h:dataTable value="#{productController.findAll()}" var="product"
-                                 styleClass="table table-bordered my-2">
-                        <h:column>
-                            <f:facet name="header">Id</f:facet>
-                            #{product.id}
-                        </h:column>
-                        <h:column>
-                            <f:facet name="header">Name</f:facet>
-                            #{product.name}
-                        </h:column>
-                        <h:column>
-                            <f:facet name="header">Category</f:facet>
-                            #{product.categoryName}
-                        </h:column>
-                        <h:column>
-                            <f:facet name="header">Description</f:facet>
-                            #{product.description}
-                        </h:column>
-                        <h:column>
-                            <f:facet name="header">Price</f:facet>
-                            #{product.price}
-                        </h:column>
-                        <h:column>
-                            <f:facet name="header">Actions</f:facet>
-
-                            <h:commandButton value="Edit" styleClass="btn btn-success"
-                                             rendered="#{request.isUserInRole('ADMIN')||request.isUserInRole('MANAGER')}"
-                                             action="#{productController.editProduct(product)}"/>
-                            <h:commandButton value="Delete" styleClass="btn btn-danger"
-                                             rendered="#{request.isUserInRole('ADMIN')||request.isUserInRole('MANAGER')}"
-                                             action="#{productController.deleteProduct(product)}">
-                                <f:ajax event="click" render="productTableForm"/>
-                            </h:commandButton>
-                            <h:commandButton value="Add to cart" styleClass="btn btn-primary"
-                                            action="#{cartController.add(product)}">
-                                <f:ajax event="click"/>
-                            </h:commandButton>
-                        </h:column>
-                    </h:dataTable>
-
-                </div>
-            </h:form>
+            <div class="col-12">
+                <form action="j_security_check" method="post">
+                    <div class="form-group">
+                        <h:outputLabel value="Login" for="j_username"/>
+                        <h:inputText styleClass="form-control" id="j_username" name="j_username" placeholder="Enter login"
+                                     required="true" requiredMessage="Login is required"/>
+                    </div>
+                    <div class="form-group">
+                        <h:outputLabel value="Password" for="j_password"/>
+                        <h:inputText p:type="password" styleClass="form-control" id="j_password" name="j_password"
+                                     placeholder="Enter password" />
+                    </div>
+                    <button>Login</button>
+                </form>
+            </div>
         </div>
-
     </div>
 
     <!-- Optional JavaScript -->
@@ -127,5 +89,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
             integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
             crossorigin="anonymous"></script>
+
 </h:body>
+
 </html>

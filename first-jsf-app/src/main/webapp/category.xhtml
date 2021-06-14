@@ -40,6 +40,21 @@
                 <li class="nav-item">
                     <h:link styleClass="nav-link" value="Cart" outcome="/cart"/>
                 </li>
+                <li class="nav-item">
+                    <h:link styleClass="nav-link" value="User" outcome="/admin/user"/>
+                </li>
+            </ul>
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <h:link styleClass="btn btn-primary" rendered="#{request.userPrincipal == null}"
+                            value="Login" outcome="/login"/>
+
+                    <h:form styleClass="ml-2">
+                        <h:commandLink styleClass="btn btn-primary" rendered="#{request.userPrincipal != null}"
+                                       action="#{userController.logout()}"
+                                       value="Logout #{request.remoteUser}"/>
+                    </h:form>
+                </li>
             </ul>
         </div>
     </nav>
@@ -50,6 +65,7 @@
 
                 <div class="col-12">
                     <h:commandButton value="Add Category" styleClass="btn btn-success"
+                                     rendered="#{request.isUserInRole('ADMIN')||request.isUserInRole('MANAGER')}"
                                      action="#{categoryController.addCategory()}"/>
                 </div>
 
@@ -68,8 +84,10 @@
                             <f:facet name="header">Actions</f:facet>
 
                             <h:commandButton value="Edit" styleClass="btn btn-success"
+                                             rendered="#{request.isUserInRole('ADMIN')||request.isUserInRole('MANAGER')}"
                                              action="#{categoryController.editCategory(category)}"/>
                             <h:commandButton value="Delete" styleClass="btn btn-danger"
+                                             rendered="#{request.isUserInRole('ADMIN')||request.isUserInRole('MANAGER')}"
                                              action="#{categoryController.deleteCategory(category)}">
                                 <f:ajax event="click" render="categoryTableForm"/>
                             </h:commandButton>
